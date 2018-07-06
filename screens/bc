@@ -1,0 +1,302 @@
+import React from 'react';
+import {  KeyboardAvoidingView,TouchableOpacity,StyleSheet,  View, Alert, Text, Image, AsyncStorage,ToastAndroid } from 'react-native';
+import { Picker, Button,Item, Input, Icon } from 'native-base';
+import Dashboard from './Dashboard';
+import { Expo,Permissions, Notifications } from 'expo';
+async function getToken() {
+  // Remote notifications do not work in simulators, only on device
+  if (!Expo.Constants.isDevice) {
+    return;
+  }
+  let { status } = await Expo.Permissions.askAsync(
+    Expo.Permissions.NOTIFICATIONS,
+  );
+  if (status !== 'granted') {
+    return;
+  }
+  token = await Expo.Notifications.getExpoPushTokenAsync();
+  //this.setState({TokenUser : value})
+  //return value;
+  console.log('Our token', token);
+  //console.log('Our tes', this.state.token);
+  /// Send this to a server
+  // return fetch(PUSH_ENDPOINT, {
+  //   method: 'POST',
+  //   headers: {
+  //     Accept: 'application/json',
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body: JSON.stringify({
+  //     token: {
+  //       value: token,
+  //     },
+  //     user: {
+  //       username: 'Brent',
+  //     },
+  //   })
+  // });
+}
+class Login extends React.Component {
+  async saveKey(value) {
+    try {
+      await AsyncStorage.setItem('@MySuperStore:key', value);
+    } catch (error) {
+      console.log("Error saving data" + error);
+    }
+  }
+  constructor(props) {
+
+    super(props)
+
+    this.state = {
+      PasswordUser: '',
+      EmailUser: '',
+      token: null,
+      isLoading: true,
+ 
+
+
+    }
+
+  }
+  async registerForPushNotifications() {
+    const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+
+    if (status !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      if (status !== 'granted') {
+        return;
+      }
+    }
+
+    const token = await Notifications.getExpoPushTokenAsync();
+
+    this.subscription = Notifications.addListener(this.handleNotification);
+    console.log("-----------------------: "+token);
+    // this.setState({
+    //   token,
+    // });
+    const { PasswordUser } = this.state;
+    const { EmailUser } = this.state;
+    
+
+    if(EmailUser==''){
+      ToastAndroid.show('Email anda masih kosong', ToastAndroid.LONG);
+    }else if(PasswordUser==''){
+      ToastAndroid.show('Password anda masih kosong'+token, ToastAndroid.LONG);
+    }else{
+      if(!this.validateEmail(EmailUser)){
+        ToastAndroid.show('Email anda tidak valid', ToastAndroid.LONG);
+      }else if(PasswordUser.length<6){
+        ToastAndroid.show('Password anda harus lebih dari 6 karakter', ToastAndroid.LONG);
+      }else{
+        fetch('http://172.18.13.88/cbppt/login.php', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+
+        email: EmailUser,
+
+        password: PasswordUser,
+        token:token
+
+      })
+
+    }).then((response) => response.json())
+      .then((responseJson) => {
+
+        // Showing response message coming from server after inserting records.
+        if(responseJson=="Berhasil"){
+          AsyncStorage.setItem('email', EmailUser);
+          AsyncStorage.setItem('status', "Login");
+          this.props.navigation.navigate('Testing');
+
+        }else{
+          
+        Alert.alert(responseJson);
+        }
+
+      }).catch((error) => {
+        console.error(error);
+      });
+      }
+  
+
+    }
+  }
+  componentWillMount(){
+    //getToken();
+    //this.registerForPushNotifications();
+  }
+  render() {
+  //   if (this.state.isLoading) {
+  //    return (
+  //      <View style={{flex: 1, paddingTop: 20}}>
+  //        <ActivityIndicator />
+  //      </View>
+  //    );
+  //  }
+ 
+  
+    return (
+      
+      <KeyboardAvoidingView style={styles.MainContainer2} behavior="padding">
+        <View style={styles.MainContainer}>
+        <View style={styles.MainGambar}>
+          
+           <Image  source={require('./assets/sipepli.png')}        />
+            
+          </View>
+          
+          
+          <Item regular style={styles.FormInputStyleClass}>
+            <Icon type="SimpleLineIcons" name="envelope" />
+            <Input placeholder='E-mail' onChangeText={EmailUser => this.setState({ EmailUser })} placeholderTextColor='#fff'/>
+          </Item>
+
+          
+          <Item regular style={styles.FormInputStyleClass}>
+            <Icon type="SimpleLineIcons" name="lock" />
+            <Input placeholder='Password' onChangeText={PasswordUser => this.setState({ PasswordUser })} secureTextEntry={true} placeholderTextColor='#fff'/>
+          </Item>
+          
+
+          <Button block info style={styles.ButtonStyleClass} onPress={this.registerForPushNotifications}><Text style={{ color: '#fff', letterSpacing: 2, fontSize: 20 }}> Login </Text></Button>
+          <Text style={{ marginTop: 10, fontSize: 14, textAlign: 'center',color:'rgba(245,247,250,0.9)' }}>Anda tidak memiliki akun ?
+          <Text style={{fontWeight: 'bold'}} onPress={() => this.props.navigation.navigate('Register')}> Buat Akun Sekarang
+        </Text>
+         </Text>
+         <Text style={{fontWeight: 'bold'}} onPress={() => this.props.navigation.navigate('Testing')}>Test
+        </Text>
+
+        <TouchableOpacity
+          onPress={() => this.registerForPushNotifications()}
+          >
+          <Text>Register me for notifications!</Text>
+        </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    );
+  }
+validateEmail = (email) => {
+  var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
+
+  UserLoginFunction = () => {
+
+
+    const { PasswordUser } = this.state;
+    const { EmailUser } = this.state;
+    
+    const { token } = this.state;
+
+    if(EmailUser==''){
+      ToastAndroid.show('Email anda masih kosong', ToastAndroid.LONG);
+    }else if(PasswordUser==''){
+      ToastAndroid.show('Password anda masih kosong'+token, ToastAndroid.LONG);
+    }else{
+      if(!this.validateEmail(EmailUser)){
+        ToastAndroid.show('Email anda tidak valid', ToastAndroid.LONG);
+      }else if(PasswordUser.length<6){
+        ToastAndroid.show('Password anda harus lebih dari 6 karakter', ToastAndroid.LONG);
+      }else{
+        fetch('http://172.18.13.88/cbppt/login.php', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+
+        email: EmailUser,
+
+        password: PasswordUser
+
+      })
+
+    }).then((response) => response.json())
+      .then((responseJson) => {
+
+        // Showing response message coming from server after inserting records.
+        if(responseJson=="Berhasil"){
+          AsyncStorage.setItem('email', EmailUser);
+          AsyncStorage.setItem('status', "Login");
+          this.props.navigation.navigate('Dashboard');
+
+        }else{
+          
+        Alert.alert(responseJson);
+        }
+
+      }).catch((error) => {
+        console.error(error);
+      });
+      }
+  
+
+    }
+  
+
+  }
+}
+
+const styles = StyleSheet.create({
+  MainContainer2: {
+    justifyContent: 'center',
+    backgroundColor: '#368ee0',
+    flex: 1
+  },
+  MainGambar:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin:20,
+    marginBottom:40
+  },
+  MainContainer: {
+    justifyContent: 'center',
+    flex: 1,
+    margin: 10
+  },
+  FormInputStyleClass: {
+
+    backgroundColor: 'rgba(245,247,250,0.5)',
+    borderRadius: 8,
+    borderWidth: 0,
+    borderColor: 'rgba(245,247,250,0.5)',
+
+    // Set border Radius.
+    height: 40,
+    marginLeft: 20,
+    marginRight: 20,
+    marginBottom: 20
+  },
+  // TextInputStyleClass: {
+
+  //   textAlign: 'center',
+  //   marginBottom: 7,
+  //   height: 40,
+  //   borderWidth: 1,    
+  //   // Set border Hex Color Code Here.
+  //   borderColor: '#2196F3',
+
+  //   // Set border Radius.
+  //   borderRadius: 5,
+
+  //   // Set border Radius.
+  //   //borderRadius: 10 ,
+  // },
+
+  ButtonStyleClass: {
+    // Set border Radius.
+
+    margin: 20,
+    borderRadius: 5,
+    backgroundColor: 'rgba(243,129,129,1)'
+
+  }
+});
+export default Login;
