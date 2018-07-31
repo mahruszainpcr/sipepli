@@ -50,7 +50,7 @@ class Register extends React.Component {
       getToken();
       this.listener = Expo.Notifications.addListener(this.handleNotification);
     
-      return fetch('http://172.18.13.88/cbppt/list_paket.php')
+      return fetch('http://mobile-sipepli.riset.pcr.ac.id/list_paket.php')
         .then((response) => response.json())
         .then((responseJson) => {
           this.setState({
@@ -84,7 +84,7 @@ class Register extends React.Component {
       <KeyboardAvoidingView style={styles.MainContainer2} behavior="padding">
       
       
-      <Icon type="MaterialIcons" name="arrow-back" onPress={ () => {this.props.navigation.navigate('Login') } }  style={{marginTop:30,marginLeft:30,color:'#fff'}}/>
+      {/* <Icon type="MaterialIcons" name="arrow-back" onPress={ () => {this.props.navigation.navigate('Login') } }  style={{marginTop:30,marginLeft:30,color:'#fff'}}/> */}
       <View style={styles.MainContainer}>
       <View style={styles.MainGambar}>
         
@@ -92,27 +92,27 @@ class Register extends React.Component {
           
         </View>
           <Item regular style={styles.FormInputStyleClass}>
-            <Icon type="SimpleLineIcons" name="user" />
+            {/* <Icon type="SimpleLineIcons" name="user" /> */}
             <Input placeholder='Nama Lengkap' onChangeText={NamaUser => this.setState({ NamaUser })} placeholderTextColor='#fff'/>
           </Item>
 
           <Item regular style={styles.FormInputStyleClass}>
-            <Icon type="SimpleLineIcons" name="location-pin" />
+            {/* <Icon type="SimpleLineIcons" name="location-pin" /> */}
             <Input placeholder='Alamat' onChangeText={AlamatUser => this.setState({ AlamatUser })} placeholderTextColor='#fff'/>
           </Item>
 
           <Item regular style={styles.FormInputStyleClass}>
-            <Icon type="SimpleLineIcons" name="phone" />
+            {/* <Icon type="SimpleLineIcons" name="phone" /> */}
             <Input placeholder='No Handphone' keyboardType = 'numeric' onChangeText={NoHpUser => this.setState({ NoHpUser })} placeholderTextColor='#fff' />
           </Item>
 
           <Item regular style={styles.FormInputStyleClass}>
-            <Icon type="SimpleLineIcons" name="envelope" />
+            {/* <Icon type="SimpleLineIcons" name="envelope" /> */}
             <Input placeholder='E-mail' onChangeText={EmailUser => this.setState({ EmailUser })} placeholderTextColor='#fff'/>
           </Item>
 
           <Item regular style={styles.FormInputStyleClass}>
-            <Icon type="SimpleLineIcons" keyboardType ='email-address' name="present" />
+            {/* <Icon type="SimpleLineIcons" keyboardType ='email-address' name="present" /> */}
             
             <Picker
             selectedValue={this.state.PaketUser}
@@ -130,11 +130,11 @@ class Register extends React.Component {
           </Item>
 
           <Item regular style={styles.FormInputStyleClass}>
-            <Icon type="SimpleLineIcons" name="lock" />
+            {/* <Icon type="SimpleLineIcons" name="lock" /> */}
             <Input placeholder='Password' onChangeText={PasswordUser => this.setState({ PasswordUser })} secureTextEntry={true} placeholderTextColor='#fff'/>
           </Item>
           <Item regular style={styles.FormInputStyleClass}>
-            <Icon type="SimpleLineIcons" name="lock" />
+            {/* <Icon type="SimpleLineIcons" name="lock" /> */}
             <Input placeholder='Tulis kembali password anda' onChangeText={Repassword => this.setState({ Repassword })} secureTextEntry={true} placeholderTextColor='#fff'/>
           </Item>
 
@@ -189,7 +189,7 @@ validateHp = (hp) => {
       }else if(PasswordUser.length<6){
         ToastAndroid.show('Password anda harus lebih dari 6 karakter', ToastAndroid.LONG);
       }else{
-        fetch('http://172.18.13.88/cbppt/pendaftaran.php', {
+        fetch('http://mobile-sipepli.riset.pcr.ac.id/pendaftaran.php', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

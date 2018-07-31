@@ -12,6 +12,7 @@ export default (MainScreenNavigator = TabNavigator(
   },
   {
     tabBarPosition: "bottom",
+    swipeEnabled: false,       
     tabBarComponent: props => {
       return (
         <Footer>
@@ -20,23 +21,24 @@ export default (MainScreenNavigator = TabNavigator(
               vertical
               active={props.navigationState.index === 0}
               onPress={() => props.navigation.navigate("LucyChat")}>
-              <Icon name="bowtie" />
-              <Text>Lucy</Text>
-            </Button>
-            <Button
-              vertical
-              active={props.navigationState.index === 1}
-              onPress={() => props.navigation.navigate("JadeChat")}>
-              <Icon name="briefcase" />
-              <Text>Nine</Text>
+              <Icon name="logo-whatsapp" />
+              <Text>No WA</Text>
             </Button>
             <Button
               vertical
               active={props.navigationState.index === 2}
               onPress={() => props.navigation.navigate("NineChat")}>
-              <Icon name="headset" />
-              <Text>Jade</Text>
+              <Icon name="md-mail" />
+              <Text>E-Mail</Text>
             </Button>
+            <Button
+              vertical
+              active={props.navigationState.index === 1}
+              onPress={() => props.navigation.navigate("JadeChat")}>
+              <Icon name="md-camera" />
+              <Text>Kamera</Text>
+            </Button>
+            
           </FooterTab>
         </Footer>
       );

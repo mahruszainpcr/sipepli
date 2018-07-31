@@ -127,7 +127,7 @@ class Testing extends React.Component {
             <Text style={styles.userNameText}>Muhammad Mahrus Zain</Text>
             <View style={styles.userAddressRow}>
               <View>
-              <Icon type="SimpleLineIcons" name="location-pin" 
+              <Icon name="location" 
                   underlayColor="transparent"
                   iconStyle={styles.placeIcon}
                   onPress={this.onPressPlace} style={{color:'white'}} />

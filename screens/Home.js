@@ -27,7 +27,7 @@ class Home extends React.Component {
   }
   componentDidMount() {
    
-      return fetch('http://172.16.38.7/cbppt/login.php')
+      return fetch('http://mobile-sipepli.riset.pcr.ac.id/login.php')
         .then((response) => response.json())
         .then((responseJson) => {
           this.setState({
@@ -165,7 +165,7 @@ validateHp = (hp) => {
       }else if(PasswordUser.length<6){
         ToastAndroid.show('Password anda harus lebih dari 6 karakter', ToastAndroid.LONG);
       }else{
-        fetch('http://172.16.38.7/cbppt/login.php', {
+        fetch('http://mobile-sipepli.riset.pcr.ac.id/login.php', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

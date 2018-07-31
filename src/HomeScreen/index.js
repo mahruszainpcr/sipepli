@@ -7,6 +7,7 @@ import { DrawerNavigator } from "react-navigation";
 const HomeScreenRouter = DrawerNavigator(
   {
     Home: { screen: HomeScreen },
+    Home: { screen: HomeScreen },
     Chat: { screen: MainScreenNavigator },
     Profile: { screen: Profile },
     DrawerOpen: { screen: SideBar } 

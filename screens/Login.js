@@ -4,6 +4,7 @@ import { Picker, Button,Item, Input, Icon } from 'native-base';
 import Dashboard from './Dashboard';
 import { Permissions, Notifications } from 'expo';
 class Login extends React.Component {
+
   async saveKey(value) {
     try {
       await AsyncStorage.setItem('@MySuperStore:key', value);
@@ -11,6 +12,11 @@ class Login extends React.Component {
       console.log("Error saving data" + error);
     }
   }
+  
+  static navigationOptions = ({ navigation }) => ({
+    
+    header:null
+  })
   constructor(props) {
 
     super(props)
@@ -27,75 +33,7 @@ class Login extends React.Component {
     }
 
   }
-  async registerForPushNotifications() {
-    const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-
-    if (status !== 'granted') {
-      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-      if (status !== 'granted') {
-        return;
-      }
-    }
-
-    const token = await Notifications.getExpoPushTokenAsync();
-
-    this.subscription = Notifications.addListener(this.handleNotification);
-    console.log("-----------------------: "+token);
-    // this.setState({
-    //   token,
-    // });
-     const { PasswordUser } = this.state;
-    const { EmailUser } = this.state;
-
-    if(EmailUser==''){
-      ToastAndroid.show('Email anda masih kosong', ToastAndroid.LONG);
-    }else if(PasswordUser==''){
-      ToastAndroid.show('Password anda masih kosong', ToastAndroid.LONG);
-    }else{
-      if(!this.validateEmail(EmailUser)){
-        ToastAndroid.show('Email anda tidak valid', ToastAndroid.LONG);
-      }else if(PasswordUser.length<6){
-        ToastAndroid.show('Password anda harus lebih dari 6 karakter', ToastAndroid.LONG);
-      }else{
-        fetch('http://172.18.13.88/cbppt/login.php', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-
-        email: EmailUser,
-
-        password: PasswordUser
-
-      })
-
-    }).then((response) => response.json())
-      .then((responseJson) => {
-
-        // Showing response message coming from server after inserting records.
-        if(responseJson=="Berhasil"){
-          AsyncStorage.setItem('email', EmailUser);
-          AsyncStorage.setItem('status', "Login");
-          this.props.navigation.navigate('Testing');
-
-        }else{
-          
-        Alert.alert(responseJson);
-        }
-
-      }).catch((error) => {
-        console.error(error);
-      });
-      }
   
-
-    }
-  
-
-  
-  }
   
   render() {
   //   if (this.state.isLoading) {
@@ -119,25 +57,25 @@ class Login extends React.Component {
           
           
           <Item regular style={styles.FormInputStyleClass}>
-            <Icon type="SimpleLineIcons" name="envelope" />
+            {/* <Icon type="SimpleLineIcons" name="envelope" /> */}
             <Input placeholder='E-mail' onChangeText={EmailUser => this.setState({ EmailUser })} placeholderTextColor='#fff'/>
           </Item>
 
           
           <Item regular style={styles.FormInputStyleClass}>
-            <Icon type="SimpleLineIcons" name="lock" />
+            {/* <Icon type="SimpleLineIcons" name="lock" /> */}
             <Input placeholder='Password' onChangeText={PasswordUser => this.setState({ PasswordUser })} secureTextEntry={true} placeholderTextColor='#fff'/>
           </Item>
           
 
           <Button block info style={styles.ButtonStyleClass} onPress={this.UserLoginFunction}><Text style={{ color: '#fff', letterSpacing: 2, fontSize: 20 }}> Login </Text></Button>
-          <Button block info style={styles.ButtonStyleClass} onPress={this.registerForPushNotifications}><Text style={{ color: '#fff', letterSpacing: 2, fontSize: 20 }}> Login </Text></Button>
+          {/* <Button block info style={styles.ButtonStyleClass} onPress={this.registerForPushNotifications}><Text style={{ color: '#fff', letterSpacing: 2, fontSize: 20 }}> Login </Text></Button> */}
           <Text style={{ marginTop: 10, fontSize: 14, textAlign: 'center',color:'rgba(245,247,250,0.9)' }}>Anda tidak memiliki akun ?
           <Text style={{fontWeight: 'bold'}} onPress={() => this.props.navigation.navigate('Register')}> Buat Akun Sekarang
         </Text>
          </Text>
-         <Text style={{fontWeight: 'bold'}} onPress={() => this.registerForPushNotifications}>Test
-        </Text>
+         {/* <Text style={{fontWeight: 'bold'}} onPress={() => this.registerForPushNotifications}>Test
+        </Text> */}
 
 
         </View>
@@ -165,7 +103,7 @@ validateEmail = (email) => {
       }else if(PasswordUser.length<6){
         ToastAndroid.show('Password anda harus lebih dari 6 karakter', ToastAndroid.LONG);
       }else{
-        fetch('http://172.18.13.88/cbppt/login.php', {
+        fetch('http://mobile-sipepli.riset.pcr.ac.id/login.php', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -183,15 +121,18 @@ validateEmail = (email) => {
       .then((responseJson) => {
 
         // Showing response message coming from server after inserting records.
-        if(responseJson=="Berhasil"){
+        if(responseJson.status=="Berhasil"){
           AsyncStorage.setItem('email', EmailUser);
+          AsyncStorage.setItem('cust_id', responseJson.cust_id);
           AsyncStorage.setItem('status', "Login");
-          this.props.navigation.navigate('Testing');
+          this.props.navigation.navigate('Home');
 
         }else{
           
         Alert.alert(responseJson);
         }
+        // console.log(responseJson);
+        // console.log(responseJson.cust_id);
 
       }).catch((error) => {
         console.error(error);
