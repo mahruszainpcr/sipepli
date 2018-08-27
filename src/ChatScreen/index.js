@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import LucyChat from "./LucyChat.js";
-import JadeChat from "./JadeChat.js";
+import JadeChat from "../HomeScreen/HomeScreen";
 import NineChat from "./NineChat.js";
 import { TabNavigator } from "react-navigation";
 import { Button, Text, Icon, Footer, FooterTab } from "native-base";
@@ -19,8 +19,8 @@ export default (MainScreenNavigator = TabNavigator(
           <FooterTab>
             <Button
               vertical
-              active={props.navigationState.index === 0}
-              onPress={() => props.navigation.navigate("LucyChat")}>
+              active={props.navigationState.index === 1}
+              onPress={() => props.navigation.navigate("JadeChat")}>
               <Icon name="logo-whatsapp" />
               <Text>No WA</Text>
             </Button>
@@ -33,8 +33,8 @@ export default (MainScreenNavigator = TabNavigator(
             </Button>
             <Button
               vertical
-              active={props.navigationState.index === 1}
-              onPress={() => props.navigation.navigate("JadeChat")}>
+              active={props.navigationState.index === 0}
+              onPress={() => props.navigation.navigate("LucyChat")}>
               <Icon name="md-camera" />
               <Text>Kamera</Text>
             </Button>

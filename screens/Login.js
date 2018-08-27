@@ -156,7 +156,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     margin:20,
-    marginBottom:40
+    marginBottom:40,
+    padding:5,
+    backgroundColor:'#fff',
+    borderBottomLeftRadius:15,
+    borderBottomRightRadius:50,
+    borderTopLeftRadius:15,
+    borderTopRightRadius:30,
+    borderWidth: 0,
+    borderColor: '#fff'
   },
   MainContainer: {
     justifyContent: 'center',
