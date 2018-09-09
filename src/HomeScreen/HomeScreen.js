@@ -73,18 +73,44 @@ export default class HomeScreen extends Component {
       email:''
     }
     
-    this.fetcthItems()
-    this.fetcthItemsParkirLiar()
+    
+    
   }
-  fetcthItems = () => {
-    fetch('http://mobile-sipepli.riset.pcr.ac.id/list_pergerakan_liar.php')
+  fetcthItems = (id) => {
+    fetch('http://mobile-sipepli.riset.pcr.ac.id/list_pergerakan_liar.php',{
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+
+      
+        id_customer: id,
+
+
+      })
+  })
       .then(response => response.json())
       .then(({results}) => this.setState({
         pergerakanLiar:results
       }))
   }
-  fetcthItemsParkirLiar = () => {
-    fetch('http://mobile-sipepli.riset.pcr.ac.id/list_parkir_liar.php')
+  fetcthItemsParkirLiar = (id) => {
+    fetch('http://mobile-sipepli.riset.pcr.ac.id/list_parkir_liar.php',{
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+
+      
+        id_customer: id,
+
+
+      })
+  })
       .then(response => response.json())
       .then(({results}) => this.setState({
         parkirLiar:results
@@ -140,7 +166,7 @@ export default class HomeScreen extends Component {
     );
 }
   componentDidMount() {
-
+this.fetcthItems()
     getToken();
    this.listener = Expo.Notifications.addListener(this.handleNotification);
     AsyncStorage.getItem('email', (error, result) => {
@@ -150,6 +176,15 @@ export default class HomeScreen extends Component {
         });
       }
     });
+    AsyncStorage.getItem('cust_id', (error, result) => {
+      if (result) {
+        this.setState({
+          cust_id: result
+        });
+        this.fetcthItems(result);
+        this.fetcthItemsParkirLiar(result)
+      }
+    });
     AsyncStorage.getItem('status', (error, result) => {
       if (result) {
         this.setState({
@@ -157,7 +192,9 @@ export default class HomeScreen extends Component {
         });
       }
     });
+    
   }
+  
   handleNotification = ({ origin, data }) => {
     console.log(
       `Push notification ${origin} with data: ${JSON.stringify(data)}`,

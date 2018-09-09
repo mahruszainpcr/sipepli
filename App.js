@@ -8,6 +8,10 @@ import {
 
 import Register from './screens/Register'
 import Slide from './screens/Slide'
+import Handphone from './screens/Handphone'
+import EmailScreen from './screens/EmailScreen'
+import Paket from './screens/Paket'
+import Jadwal from './screens/Jadwal'
 import Login from './screens/Login'
 import Testing from './screens/Testing'
 import Testing2 from './screens/Testing2'
@@ -76,7 +80,7 @@ export default class App extends React.Component {
             return (    <AppRouteConfigs /> );
             //return ( <Home/>);
        }else{
-           return (    <Home/> );
+           return (    <Login/> );
        }
    
   }
@@ -134,6 +138,11 @@ const AppRouteConfigs = createStackNavigator({
       header: null,
       gesturesEnabled: false,
   	}},
+  Login: {screen:loginScreenTrack,
+    navigationOptions: {
+      header: null,
+      gesturesEnabled: false,
+    }},
     Home: { screen: HomeScreen ,
       navigationOptions: {
         header: null,
@@ -164,11 +173,7 @@ const AppRouteConfigs = createStackNavigator({
       header: null,
       gesturesEnabled: false,
     } },
-    Login: {screen:loginScreenTrack,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: false,
-      }},
+    
     NotifPergerakan :{ screen: NotifPergerakan ,
       navigationOptions: {
         header: null,

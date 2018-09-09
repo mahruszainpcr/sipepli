@@ -56,13 +56,21 @@ export default class LucyChat extends React.Component {
     return fetch('http://mobile-sipepli.riset.pcr.ac.id/list_wa.php')
       .then((response) => response.json())
       .then((responseJson) => {
-        let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        this.setState({
-          isLoading: false,
-          dataSource: ds.cloneWithRows(responseJson),
-        }, function() {
-          // In this block you can do something with new state.
-        });
+        if(responseJson=="Tidak Ada Data"){
+          this.setState({
+            isLoading: false,
+            dataSource: "kosong"
+          })
+        }else{
+          let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+          this.setState({
+            isLoading: false,
+            dataSource: ds.cloneWithRows(responseJson),
+          }, function() {
+            // In this block you can do something with new state.
+          });
+        }
+        
       })
       .catch((error) => {
         console.error(error);
@@ -78,29 +86,74 @@ export default class LucyChat extends React.Component {
         </View>
       );
     }
+    if (this.state.dataSource=="kosong") {
+      return (
+        <Container>
+                <Header>
+                 
+                  
+                  <Body>
+                    <Title>Data WA</Title>
+                  </Body>
+                  
+                </Header>
+                <Content padder>
+                  <Item floatingLabel style={{ marginTop: 20 }}>
+                    <Label>Masukkan No WA</Label>
+                    <Input onChangeText={NoWa => this.setState({ NoWa })}/>
+                  </Item>
+                  <Item floatingLabel style={{ marginTop: 20 }}>
+                    <Label>Keterangan (Pemilik No WA)</Label>
+                    <Input onChangeText={Keterangan => this.setState({ Keterangan })}/>
+                  </Item>
+                  <Button rounded danger
+                    style={{ marginTop: 20, alignSelf: "center" }}
+                    onPress={this.UserRegistrationFunction}>
+                    <Text>Simpan Data</Text>
+                  </Button>
+                  
+                  {/* <List
+                    leftOpenValue={75}
+                    rightOpenValue={-75}
+                    dataSource={this.state.dataSource}
+                    renderRow={(rowData)  =>
+                     <ListItem icon>
+                    <Left>
+                      <Button style={{ backgroundColor: "green" }}>
+                        <Icon active name="logo-whatsapp" />
+                      </Button>
+                    </Left>
+                    <Body>
+                      <Text>{rowData.keterangan}</Text>
+                    </Body>
+                    <Right>
+                      <Text>{rowData.cell_no}</Text>
+                    </Right>
+                  </ListItem>}
+                    renderLeftHiddenRow={data =>
+                      <Button full onPress={() => alert(data.keterangan)}>
+                        <Icon active name="information-circle" />
+                      </Button>}
+                    renderRightHiddenRow={data =>
+                      <Button full danger onPress={() => this.deleteRow(data.id)}>
+                        <Icon active name="trash" />
+                      </Button>
+                      }
+                  /> */}
+                </Content>
+              </Container>
+      );
+    }
    
     return (
       <Container>
               <Header>
-                 <Left>
-                   <Button
-                    transparent
-                    onPress={() => this.props.navigation.navigate("DrawerOpen")}>
-                    <Icon name="md-refresh" />
-                  </Button>
-                </Left>
+                
                 
                 <Body>
                   <Title>Data WA</Title>
                 </Body>
-                <Right>
-                <Button
-                    transparent
-                    onPress={() => this.props.navigation.navigate("Chat")}>
-                    <Icon name="md-refresh" />
-                  </Button>
-                </Right>
-                <Right />
+               
               </Header>
               <Content padder>
                 <Item floatingLabel style={{ marginTop: 20 }}>

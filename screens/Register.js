@@ -111,10 +111,10 @@ class Register extends React.Component {
             <Input placeholder='E-mail' onChangeText={EmailUser => this.setState({ EmailUser })} placeholderTextColor='#fff'/>
           </Item>
 
-          <Item regular style={styles.FormInputStyleClass}>
+          {/* <Item regular style={styles.FormInputStyleClass}> */}
             {/* <Icon type="SimpleLineIcons" keyboardType ='email-address' name="present" /> */}
             
-            <Picker
+            {/* <Picker
             selectedValue={this.state.PaketUser}
  
             onValueChange={(itemValue, itemIndex) => this.setState({PaketUser: itemValue})}
@@ -125,9 +125,9 @@ class Register extends React.Component {
             <Picker.Item label={item.feature_name} value={item.feature_id} key={key} />)
             )}
     
-          </Picker>
+          </Picker> */}
            
-          </Item>
+          {/* </Item> */}
 
           <Item regular style={styles.FormInputStyleClass}>
             {/* <Icon type="SimpleLineIcons" name="lock" /> */}
@@ -165,7 +165,7 @@ validateHp = (hp) => {
     const { PasswordUser } = this.state;
     const { Repassword } = this.state;
     const { EmailUser } = this.state;
-    const { PaketUser } = this.state;
+    // const { PaketUser } = this.state;
 
     console.log(NoHpUser.length)
     console.log(isNaN(NoHpUser))
@@ -189,6 +189,28 @@ validateHp = (hp) => {
       }else if(PasswordUser.length<6){
         ToastAndroid.show('Password anda harus lebih dari 6 karakter', ToastAndroid.LONG);
       }else{
+        fetch('http://mobile-sipepli.riset.pcr.ac.id/kirim_email_mobile.php', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+    
+            
+           email: EmailUser
+    
+          })
+    
+        }).then((response) => response.json())
+          .then((responseJson) => {
+    
+            // Showing response message coming from server after inserting records.
+            //Alert.alert(responseJson);
+    
+          }).catch((error) => {
+            console.error(error);
+          });
         fetch('http://mobile-sipepli.riset.pcr.ac.id/pendaftaran.php', {
       method: 'POST',
       headers: {
@@ -201,7 +223,7 @@ validateHp = (hp) => {
 
         alamat: AlamatUser,
         no_hp: NoHpUser,
-        paket: PaketUser,
+        // paket: PaketUser,
         email: EmailUser,
 
         password: PasswordUser
